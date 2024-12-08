@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User</title>
+</head>
+<body>
+<h2>Update User</h2>
+<form th:method="POST" th:action="@{/updateuser}" th:object="${user}">
+
+    <input type="hidden" th:field="*{id}"/>
+
+    <label>Enter name: </label>
+    <input type="text" th:field="*{name}" id="name" required/>
+    <p style="color: red" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+        Incorrect name
+    </p>
+
+    <label>Enter surname: </label>
+    <input type="text" th:field="*{surname}" id="surname" required/>
+    <p style="color: red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">
+        Incorrect surname
+    </p>
+
+    <label>Enter department: </label>
+    <input type="text" th:field="*{department}" id="department" required/>
+    <p style="color: red" th:if="${#fields.hasErrors('department')}" th:errors="*{department}">
+        Incorrect department
+    </p>
+
+    <label>Enter salary: </label>
+    <input type="number" th:field="*{salary}" id="salary" required/>
+    <p style="color: red" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}">
+        Incorrect salary
+    </p>
+
+    <input type="submit" value="Update"/>
+</form>
+
+<!--<a href="/" th:href="@{/}">Back to User List</a>-->
+</body>
+</html>
