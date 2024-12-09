@@ -10,22 +10,24 @@ import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+
     @PersistenceContext
     public EntityManager entityManager;
 
     @Override
-
+    @Transactional
     public void save(User user) {
         entityManager.persist(user);
     }
 
     @Override
-
+    @Transactional(readOnly = true)
     public User findById(Long id) {
         return entityManager.find(User.class, id);
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         User user = findById(id);
         if (user != null) {
@@ -40,7 +42,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<User> findAll() {
         return entityManager.createQuery("FROM User", User.class).getResultList();
     }
