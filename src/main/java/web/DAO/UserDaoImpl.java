@@ -14,10 +14,11 @@ public class UserDaoImpl implements UserDao {
     @PersistenceContext
     public EntityManager entityManager;
 
+
     @Override
     @Transactional
-    public void save(User user) {
-        entityManager.persist(user);
+    public void saveOrUpdate(User user) {
+        entityManager.merge(user);
     }
 
     @Override
@@ -35,11 +36,6 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @Override
-    @Transactional
-    public void update(User user) {
-        entityManager.merge(user);
-    }
 
     @Override
     @Transactional(readOnly = true)
