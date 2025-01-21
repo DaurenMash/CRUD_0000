@@ -28,13 +28,13 @@ public class UserController {
 
     @GetMapping("/")
     public String listUsers(Model model) {
-        List<User> users = userService.findAll();
-        model.addAttribute("users", users);
+        model.addAttribute("users", userService.findAll());
         return "users";
     }
 
     @PostMapping("/edit-user")
-    public String editUser(@RequestParam("id") Long id, @RequestParam("name") String name, Model model) {
+    public String editUser(@RequestParam("id") Long id,
+                           @RequestParam("name") String name, Model model) {
         User userToEdit = userService.findById(id);
         if (userToEdit != null) {
             userToEdit.setName(name);
@@ -44,11 +44,11 @@ public class UserController {
     }
 
     @PostMapping("/add-user")
-    public String addUser(@RequestParam("name") String name, Model model) {
-        User newUser = new User(name);
-        userService.saveOrUpdate(newUser);
+    public String addUser(@ModelAttribute("user") @Valid User user) {
+        userService.saveOrUpdate(user);
         return "redirect:/";
     }
+
 
     @PostMapping("/delete-user")
     public String deleteUser(@RequestParam("id") Long id, Model model) {
@@ -87,6 +87,12 @@ public class UserController {
 //            return "adduser";
 //        }
 //        userService.save(user);
+//        return "redirect:/";
+//    }
+//    @PostMapping("/add-user")
+//    public String addUser(@RequestParam("name") String name, Model model) {
+//        User newUser = new User();
+//        userService.saveOrUpdate(newUser);
 //        return "redirect:/";
 //    }
 //
