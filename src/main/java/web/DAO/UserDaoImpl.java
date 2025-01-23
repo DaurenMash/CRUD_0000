@@ -40,6 +40,6 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        return entityManager.createQuery("FROM User", User.class).getResultList();
+        return entityManager.createQuery("Select u FROM User u", User.class).getResultList();
     }
 }

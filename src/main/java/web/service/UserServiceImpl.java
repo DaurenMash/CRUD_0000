@@ -19,6 +19,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public List<User> findAll() {
+        return userDao.findAll();
+    }
+
+    @Override
     public void saveOrUpdate(User user) {
         userDao.saveOrUpdate(user);
     }
@@ -33,11 +39,5 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(Long id) {
         userDao.delete(id);
-    }
-
-    @Override
-    @Transactional
-    public List<User> findAll() {
-        return userDao.findAll();
     }
 }

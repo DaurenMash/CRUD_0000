@@ -1,15 +1,15 @@
 package web.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import web.model.User;
 import web.service.UserService;
 
 import javax.validation.Valid;
-import java.util.List;
 
 
 @Controller
@@ -17,6 +17,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     public UserController(UserService userService) {
@@ -34,7 +35,7 @@ public class UserController {
 
     @PostMapping("/edit-user")
     public String editUser(@RequestParam("id") Long id,
-                           @RequestParam("name") String name, Model model) {
+                           @RequestParam("name") String name) {
         User userToEdit = userService.findById(id);
         if (userToEdit != null) {
             userToEdit.setName(name);
@@ -44,7 +45,14 @@ public class UserController {
     }
 
     @PostMapping("/add-user")
-    public String addUser(@ModelAttribute("user") @Valid User user) {
+    public String addUser(@ModelAttribute("user") @Valid User user, Model model) {
+        if (user.getName() == null || user.getName().isEmpty()) {
+            logger.error("Попытка передать пустой объект пользователя");
+            model.addAttribute("errorMessage",
+                    "Ошибка: Объект пользователя не может быть пустым.");
+            model.addAttribute("users", userService.findAll());
+            return "users";
+        }
         userService.saveOrUpdate(user);
         return "redirect:/";
     }
@@ -59,58 +67,3 @@ public class UserController {
 
 
 }
-
-//@Controller
-//public class UserController {
-//
-//    private final UserService userService;
-//
-//    @Autowired
-//    public UserController(UserService userService) {
-//        this.userService = userService;
-//    }
-//
-//    @GetMapping("/")
-//    public String getAllUsers(Model model) {
-//        model.addAttribute("users", userService.findAll());
-//        return "index";
-//    }
-//
-//    @GetMapping("/adduser")
-//    public String CreateUserForm(@ModelAttribute("user") User user) {
-//        return "adduser";
-//    }
-//
-//    @PostMapping("/adduser")
-//    public String addUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return "adduser";
-//        }
-//        userService.save(user);
-//        return "redirect:/";
-//    }
-//    @PostMapping("/add-user")
-//    public String addUser(@RequestParam("name") String name, Model model) {
-//        User newUser = new User();
-//        userService.saveOrUpdate(newUser);
-//        return "redirect:/";
-//    }
-//
-//    @GetMapping("/deleteUser")
-//    public String deleteUser(@RequestParam("id") long id) {
-//        userService.delete(id);
-//        return "redirect:/";
-//    }
-//
-//    @GetMapping("/updateuser")
-//    public String getEditUserForm(Model model, @RequestParam("id") long id) {
-//        model.addAttribute("user", userService.findById(id));
-//        return "updateuser";
-//    }
-//
-//    @PostMapping("/updateuser")
-//    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-//        userService.update(user);
-//        return "redirect:/";
-//    }
-//}
